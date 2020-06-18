@@ -18,8 +18,10 @@ function validateRepositoryId (request, response, next) {
         response.status(400).json({message: "ID is not valid"})
     }
 
-    return next;
+    return next();
 }
+
+app.use('/repositories/:id', validateRepositoryId);
 
 app.get("/repositories", (request, response) => {
     return response.json(repositories)
@@ -46,10 +48,6 @@ app.put("/repositories/:id", (request, response) => {
 
     const repositoryIndex = repositories.findIndex(repository => repository.id = id);
 
-    if (!isUuid(id)) {
-        return response.status(400).send();
-    }
-
     const {
         title,
         url,
@@ -73,10 +71,6 @@ app.delete("/repositories/:id", (request, response) => {
     const { id } = request.params;
 
     const repositoryIndex = repositories.findIndex(repository => repository.id == id);
-
-    if (!isUuid(id)) {
-        return response.status(400).json({message: "Reposiotry not found"});
-    }
 
     repositories.splice(repositoryIndex, 1);
 
