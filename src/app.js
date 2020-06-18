@@ -41,10 +41,36 @@ app.post("/repositories", (request, response) => {
     return response.json(repository)
 });
 
-app.put("/repositories/:id", validateRepositoryId, (request, response) => {
+app.put("/repositories/:id", (request, response) => {
+    const { id } = request.params;
+
+    const repositoryIndex = repositories.findIndex(repository => repository.id = id);
+
+    if (!isUuid(id)) {
+        return response.status(400).send();
+    }
+
+    const {
+        title,
+        url,
+        techs
+    } = request.body;
+
+    const repository = {
+        id: id,
+        title,
+        url,
+        techs,
+        likes: 0
+    };
+
+    repositories[repositoryIndex] = repository;
+
+    response.json(repository)
 });
 
-app.delete("/repositories/:id", validateRepositoryId, (request, response) => {
+app.delete("/repositories/:id", (request, response) => {
+    
 });
 
 app.post("/repositories/:id/like", (request, response) => {
